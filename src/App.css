@@ -1,38 +1,37 @@
-.App {
-  text-align: center;
+.App
+{
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.logoImg
+{
+  height: 34px;
+  width: 34px;
+  float: left;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.coinImg
+{
+  height: 24px;
+  width: 24px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.profit
+{
+  color: green;
 }
 
-.App-link {
-  color: #61dafb;
+.loss
+{
+  color: red;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.coinWrapper
+{
+  margin-top: 5%;
+  height: 80%;
+  width: 100%;
+  overflow: hidden;
 }
