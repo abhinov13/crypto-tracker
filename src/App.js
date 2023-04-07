@@ -55,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function App() {
   const [currency, setCurrency] = useState('INR');
-  const [itemPerPage, setItemPerPage] = useState('20');
+  const [itemPerPage, setItemPerPage] = useState('100');
   const [page, setPage] = useState(1);
   const [orderBy, setOrderBy] = useState('market_cap_desc');
   const [coinList, setCoinList] = useState([]);
