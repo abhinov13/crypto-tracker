@@ -33,7 +33,7 @@ const CoinList = (props) => {
     return (<>
         {
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: '80vh' }}>
+            <TableContainer sx={{ maxHeight: '80vh' }} onScroll={(e)=>{props.handleScroll(e)}}>
                 <Table sx={{ minWidth: 700 }} stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>

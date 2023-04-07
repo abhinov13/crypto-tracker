@@ -53,20 +53,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
 function App() {
   const [currency, setCurrency] = useState('INR');
   const [itemPerPage, setItemPerPage] = useState('20');
-  const [page, setPage] = useState('1');
+  const [page, setPage] = useState(1);
   const [orderBy, setOrderBy] = useState('market_cap_desc');
   const [coinList, setCoinList] = useState([]);
+  const [completeCoinList,setCompleteCoinList] = useState([]);
   const [searchParam,setSearchParam] = useState('');
+  const [emptyFilter,setEmptyFilter] = useState(true);
+
 
 
   const fetchData = async () => {
-    const requestUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${itemPerPage}&page=${page}&sparkline=false`;
+    const requestUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${itemPerPage}&page=${page.toString()}&sparkline=false`;
     const responseBody = await fetch(requestUrl);
     const response = await responseBody.json();
+    setCompleteCoinList(response);
     setCoinList(response);
   }
 
@@ -75,22 +78,54 @@ function App() {
       fetchData();
     }, []
   )
+
   useEffect(
     () => {
-      //perform search
-    }, [searchParam]
+      if(searchParam.length == 0)
+      {
+        setCoinList(completeCoinList);
+      }
+      else
+      {
+        const updatedCoinList = completeCoinList.filter(coin => {if(coin.name.substr(0,searchParam.length).toLowerCase() === searchParam.toLowerCase()) return coin;});
+        setCoinList(updatedCoinList);
+      }
+      }, [searchParam,completeCoinList]
   )
+
+  const addData = async () =>
+  {
+    const newPage = page+1;
+    setPage(newPage);
+    const requestUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${itemPerPage}&page=${page.toString()}&sparkline=false`;
+    const responseBody = await fetch(requestUrl);
+    const response = await responseBody.json();
+    console.log([...coinList,...response]);
+    const newResponse = [...coinList,...response];
+    setCoinList(newResponse);
+    setCompleteCoinList(newResponse);
+  }
   const handleChange = (e) =>
   {
     setSearchParam(e.target.value);
+    if(e.target.value.length > 0)
+      setEmptyFilter(false);
+    else
+      setEmptyFilter(true);
   }
 
-
-
+  const handleScroll = (e) =>
+  {
+    const bottom = Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) <= 15;
+    if(bottom)
+    {
+      if(emptyFilter)
+      addData();
+    }
+  }
 
   return (
     <div className="App">
-
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
@@ -107,7 +142,7 @@ function App() {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder="Type to Filter…"
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>
@@ -116,7 +151,7 @@ function App() {
       </Box>
 
       <div className='coinWrapper'>
-        <CoinList coinList={coinList} />
+        <CoinList coinList={coinList} handleScroll={handleScroll} />
       </div>
     </div>
   );
